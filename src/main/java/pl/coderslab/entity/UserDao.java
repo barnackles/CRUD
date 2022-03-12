@@ -76,10 +76,10 @@ public class UserDao {
 
 
 
-    public static void remove(Connection conn, String tableName, int id) {
-        try (PreparedStatement statement =
-                     conn.prepareStatement(DELETE_USER_QUERY.replace("tableName", tableName));) {
-            statement.setInt(1, id);
+    public void delete(int userId) {
+        try (Connection conn = DbUtil.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(DELETE_USER_QUERY);
+            statement.setInt(1, userId);
             statement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,8 +89,6 @@ public class UserDao {
     public String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
-
-
 
 
 }

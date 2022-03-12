@@ -26,7 +26,7 @@ public class MainDao {
 
         //update
 
-        UserDao userUpdateDao = new UserDao();
+      /*  UserDao userUpdateDao = new UserDao();
         try {
             User userToUpdate = userUpdateDao.read(5);
             userToUpdate.setUserName("barnaby");
@@ -36,7 +36,12 @@ public class MainDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
+
+        // delete
+/*
+        UserDao userToDeleteDao = new UserDao();
+        userToDeleteDao.delete(4);*/
 
     }
 }
