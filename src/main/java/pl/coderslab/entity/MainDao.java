@@ -1,14 +1,15 @@
 package pl.coderslab.entity;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 
 public class MainDao {
     public static void main(String[] args) {
 
         //create
-   /* User test = new User("tester", "test@gmail.com", "test123");
-    UserDao testDao = new UserDao();
-    testDao.create(test);*/
+  /* User tony = new User("TonyBoss", "tb666@pert.com", "longanddiffuclt");
+    UserDao tonyDao = new UserDao();
+    tonyDao.create(tony);*/
 
         //read
   /*  UserDao readUserDao = new UserDao();
@@ -43,5 +44,13 @@ public class MainDao {
         UserDao userToDeleteDao = new UserDao();
         userToDeleteDao.delete(4);*/
 
+        // find All
+
+        UserDao userToFindAll = new UserDao();
+        try {
+            System.out.println(Arrays.deepToString(userToFindAll.findAll()));
+        } catch (SQLException|NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 }

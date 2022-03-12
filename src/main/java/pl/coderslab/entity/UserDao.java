@@ -3,6 +3,7 @@ package pl.coderslab.entity;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
+import java.util.Arrays;
 
 public class UserDao {
 
@@ -17,6 +18,9 @@ public class UserDao {
 
     private static final String DELETE_USER_QUERY =
             "DELETE FROM users WHERE id = ?;";
+
+    private static final String FIND_ALL_USERS_QUERY =
+            "SELECT * FROM users;";
 
     public User create(User user) {
         try (Connection conn = DbUtil.getConnection()) {
@@ -74,8 +78,6 @@ public class UserDao {
         }
     }
 
-
-
     public void delete(int userId) {
         try (Connection conn = DbUtil.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(DELETE_USER_QUERY);
@@ -88,6 +90,31 @@ public class UserDao {
 
     public String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    public User[] findAll() throws SQLException {
+        User[] arrayOfUsers = new User[0];
+        try (Connection conn = DbUtil.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(FIND_ALL_USERS_QUERY);
+            ResultSet resultSet = statement.executeQuery();
+
+
+            while (resultSet.next()) {
+                User userFromDb = new User(resultSet.getString("username"),resultSet.getString("email"), resultSet.getString("password") );
+                userFromDb.setId(resultSet.getInt(1));
+                arrayOfUsers = addToArray(userFromDb, arrayOfUsers);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return arrayOfUsers;
+    }
+
+    private User[] addToArray(User u, User[] users) {
+        User[] tmpUsers = Arrays.copyOf(users, users.length + 1);
+        tmpUsers[users.length] = u;
+        return tmpUsers;
     }
 
 
