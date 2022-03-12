@@ -39,22 +39,25 @@ public class UserDao {
     }
 
 
-
-    public static void printData(Connection conn, String query, String... columnNames) throws SQLException {
-
-        try (PreparedStatement statement = conn.prepareStatement(READ_USER_QUERY);
-             ResultSet resultSet = statement.executeQuery();) {
+    public User read (int userId) throws SQLException {
+        try (Connection conn = DbUtil.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(READ_USER_QUERY);
+            statement.setInt(1, userId);
+             ResultSet resultSet = statement.executeQuery();
+             User userFromDb = null;
 
             while (resultSet.next()) {
-                for (String columnName : columnNames) {
-                    System.out.print(resultSet.getString(columnName) + " ");
-                }
-                System.out.println();
+                userFromDb = new User(resultSet.getString("email"),resultSet.getString("username"), resultSet.getString("password") );
+                userFromDb.setId(resultSet.getInt(1));
             }
+            return userFromDb;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
+
     }
+
 
 
 
