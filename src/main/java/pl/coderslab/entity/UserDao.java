@@ -13,7 +13,7 @@ public class UserDao {
             "SELECT * FROM users WHERE id = ?;";
 
     private static final String UPDATE_USER_QUERY =
-            "UPDATE USERS SET username = ?, email = ?, password = ? WHERE id = ?;";
+            "UPDATE users SET username = ?, email = ?, password = ? WHERE id = ?;";
 
     private static final String DELETE_USER_QUERY =
             "DELETE FROM users WHERE id = ?;";
@@ -25,6 +25,7 @@ public class UserDao {
             statement.setString(1, user.getUserName());
             statement.setString(2, user.getEmail());
             statement.setString(3, hashPassword(user.getPassword()));
+
             statement.executeUpdate();
 
             ResultSet resultSet = statement.getGeneratedKeys();
@@ -47,7 +48,7 @@ public class UserDao {
              User userFromDb = null;
 
             while (resultSet.next()) {
-                userFromDb = new User(resultSet.getString("email"),resultSet.getString("username"), resultSet.getString("password") );
+                userFromDb = new User(resultSet.getString("username"),resultSet.getString("email"), resultSet.getString("password") );
                 userFromDb.setId(resultSet.getInt(1));
             }
             return userFromDb;
@@ -58,23 +59,19 @@ public class UserDao {
 
     }
 
-
-
-
-    public static int update(Connection conn, String query, String... params) {
-        try (PreparedStatement statement = conn.prepareStatement(UPDATE_USER_QUERY, Statement.RETURN_GENERATED_KEYS)) {
-            for (int i = 0; i < params.length; i++) {
-                statement.setString(i + 1, params[i]);
-            }
+    public void update(User user) {
+        try (Connection conn = DbUtil.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(UPDATE_USER_QUERY);
+            statement.setString(1, user.getUserName());
+            statement.setString(2, user.getEmail());
+            statement.setString(3, hashPassword(user.getPassword()));
+            statement.setString(4, String.valueOf(user.getId()));
             statement.executeUpdate();
-            ResultSet result = statement.getGeneratedKeys();
-            if (result.next()) {
-                return result.getInt(1);
-            }
+
         } catch (SQLException e) {
             e.printStackTrace();
+
         }
-        return 0;
     }
 
 
