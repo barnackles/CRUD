@@ -2,6 +2,7 @@ package pl.coderslab.entity;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+
 import java.sql.*;
 import java.util.Arrays;
 
@@ -21,6 +22,8 @@ public class UserDao {
 
     private static final String FIND_ALL_USERS_QUERY =
             "SELECT * FROM users;";
+
+
 
     public User create(User user) {
         try (Connection conn = DbUtil.getConnection()) {
@@ -100,7 +103,7 @@ public class UserDao {
 
 
             while (resultSet.next()) {
-                User userFromDb = new User(resultSet.getString("username"),resultSet.getString("email"), resultSet.getString("password") );
+                User userFromDb = new User(resultSet.getString("username"),resultSet.getString("email"), resultSet.getString("password"));
                 userFromDb.setId(resultSet.getInt(1));
                 arrayOfUsers = addToArray(userFromDb, arrayOfUsers);
             }
